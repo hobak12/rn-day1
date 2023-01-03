@@ -12,7 +12,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/3f324d31-a3b3-477a-b112-91a9cfa3b3eb"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -28,6 +29,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3f324d31-a3b3-477a-b112-91a9cfa3b3eb"
+      }
+    },
+    "owner": "kimseonhyeong",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }
