@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, TextInput, View, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import { useState } from "react";
 import { v4 } from "uuid";
 
@@ -28,9 +35,10 @@ export default function App() {
         return (
           <View key={todo.id}>
             <Text>{todo.content}</Text>
-            <Button>
-              <Text>삭제</Text>
-            </Button>
+            <Button title="삭제" />
+            <TouchableOpacity style={styles.todoEditButton}>
+              <Text>수정</Text>
+            </TouchableOpacity>
           </View>
         );
       })}
@@ -48,6 +56,9 @@ const styles = StyleSheet.create({
     marginTop: 50,
     width: "90%",
     height: 50,
+    backgroundColor: "aqua",
+  },
+  todoEditButton: {
     backgroundColor: "aqua",
   },
 });
