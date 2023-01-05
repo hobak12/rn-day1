@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   Text,
@@ -8,15 +7,16 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { v4 } from "uuid";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
   const [content, setContent] = useState("");
   const [todos, setTodos] = useState([]);
-  const [category, setCategory] = useState("JS");
+  const [category, setCategory] = useState("");
   const [editContent, setEditContent] = useState("");
 
   const newTodo = {
@@ -76,6 +76,34 @@ export default function App() {
     setTodos(newTodos);
   };
 
+  const saveCat = async (cat) => {
+    setCategory(cat);
+    await AsyncStorage.setItem("category", cat);
+  };
+
+  // 처음 렌더링 되자마자는 실행이 안되게 하기
+  // todos.length 0 일 때 === 빈 배열일 때 실행 안되게 조건 넣기
+  // 튜터님은 조건문 하고 중괄호 없이 바로 실행할 내용 넣음
+  useEffect(() => {
+    //현재의 최신  todos를 AsyncStorage에 저장
+    const saveTodos = async () => {
+      await AsyncStorage.setItem("todos", JSON.stringify(todos));
+      //자바스크립트 값을 JSON 문자열로 변환히고 배열을 저장
+    };
+
+    if (todos.length > 0) saveTodos();
+  }, [todos]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const resp_todos = await AsyncStorage.getItem("todos"); // todos 배열
+      const resp_cat = await AsyncStorage.getItem("category");
+      setTodos(JSON.parse(resp_todos));
+      setCategory(resp_cat);
+    };
+    getData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View
@@ -87,7 +115,7 @@ export default function App() {
       >
         <TouchableOpacity
           onPress={() => {
-            setCategory("JS");
+            saveCat("JS");
           }}
           style={{
             ...styles.categoryButton,
@@ -98,7 +126,7 @@ export default function App() {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setCategory("RT");
+            saveCat("RT");
           }}
           style={{
             ...styles.categoryButton,
@@ -109,7 +137,7 @@ export default function App() {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setCategory("CT");
+            saveCat("CT");
           }}
           style={{
             ...styles.categoryButton,
@@ -212,7 +240,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 10,
     top: 10,
-    backgroundColor: "aqua",
   },
 
   Done: {
@@ -221,7 +248,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 10,
     top: 10,
-    backgroundColor: "aqua",
   },
 
   categoryButton: {
